@@ -10,7 +10,7 @@
 
 void yyerror(char *s); 
 %}
-
+PRINTAR 			("show")	
 %%
 
 [0-9]+("."[0-9]+)? 	{ yylval = atof(yytext); return NUMBER; }
@@ -24,6 +24,9 @@ void yyerror(char *s);
 [%]					{ return MOD; }
 (\*\*)				{ return POW; }
 [[:space:]]			;
+[a-zA-Z]+			{ return identifier; }
+{PRINTAR}			{ return SHOW; }
+[=]					{ return attribuition; }
 .					{ yyerror("Undefined token\n"); }
 
 %%

@@ -51,16 +51,17 @@ extern int yydebug;
   {
     NUMBER = 258,
     EOL = 259,
-    PRINT = 260,
-    STRING = 261,
-    PLUS = 262,
-    MINUS = 263,
-    DIVIDE = 264,
-    TIMES = 265,
-    MOD = 266,
-    POW = 267,
-    P_LEFT = 268,
-    P_RIGHT = 269
+    PLUS = 260,
+    MINUS = 261,
+    DIVIDE = 262,
+    TIMES = 263,
+    MOD = 264,
+    POW = 265,
+    SHOW = 266,
+    attribuition = 267,
+    identifier = 268,
+    P_LEFT = 269,
+    P_RIGHT = 270
   };
 #endif
 

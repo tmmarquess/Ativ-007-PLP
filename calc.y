@@ -6,16 +6,21 @@
 %{
 #define YYSTYPE double
 #include <stdio.h>
+#include "hash_table.c"
 #include <math.h>
 extern FILE* yyin;
 
 void yyerror(char *s);
 int yylex(void);
 int yyparse();
+
+hash_table variables;
 %}
 
 %token NUMBER EOL
 %token PLUS MINUS DIVIDE TIMES MOD POW
+%token SHOW attribuition
+%token identifier
 %token P_LEFT P_RIGHT
 
 %left PLUS MINUS
@@ -27,6 +32,8 @@ int yyparse();
 
 STATEMENT:
 	STATEMENT EXPRESSION EOL {$$ = $2; printf("Resultado: %f\n", $2);}
+	| STATEMENT identifier attribuition EXPRESSION EOL {printf("atribuicao\n");}
+	| STATEMENT "show" EOL {printf("SHOW TABLE");}
 	|
 	;
 
@@ -47,6 +54,7 @@ EXPRESSION:
 void yyerror(char *s)
 {
 	printf("Error: %s\n", s);
+	yyparse();
 }
 
 int main(int argc, char *argv[])
