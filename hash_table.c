@@ -109,6 +109,11 @@ void insert_value_in_table(hash_table table, double value, char name[])
     }
 }
 
+void update(hash_table table, double value, char name[])
+{
+    insert_value_in_table(table, value, name);
+}
+
 bool remove_value_from_table(hash_table table, char name[])
 {
     int hash_value = get_hash(name);
@@ -154,7 +159,7 @@ void print_table(hash_table table)
         node *actual = table[i];
         while (actual != NULL)
         {
-            printf(" %s: %f ->", actual->name, actual->value);
+            printf(" %s = %f ->", actual->name, actual->value);
             actual = actual->next;
             empty = false;
         }
@@ -164,4 +169,5 @@ void print_table(hash_table table)
         }
         printf("\n");
     }
+    printf("\n");
 }
