@@ -4,7 +4,6 @@
 */
 
 %{
-#define YYSTYPE double
 #include <stdio.h>
 #include "hash_table.c"
 #include <math.h>
@@ -17,10 +16,14 @@ int yyparse();
 hash_table variables;
 %}
 
-%token NUMBER EOL
+%union{
+    double double_val;
+    char *str_val;
+};
+
+%token EOL
 %token PLUS MINUS DIVIDE TIMES MOD POW
-%token SHOW attribuition
-%token identifier
+%token SHOW attribuition QUOTE PRINT
 %token P_LEFT P_RIGHT
 
 %left PLUS MINUS
@@ -28,12 +31,18 @@ hash_table variables;
 %left MOD POW
 %left P_LEFT P_RIGHT
 
+%token <double_val> NUMBER
+%token <str_val> identifier
+
+%type <double_val> STATEMENT EXPRESSION
+
 %%
 
 STATEMENT:
 	STATEMENT EXPRESSION EOL {$$ = $2; printf("Resultado: %f\n", $2);}
 	| STATEMENT identifier attribuition EXPRESSION EOL {printf("atribuicao\n");}
-	| STATEMENT "show" EOL {printf("SHOW TABLE");}
+	| STATEMENT SHOW EOL {print_table(variables);}
+	| STATEMENT PRINT P_LEFT QUOTE identifier QUOTE P_RIGHT EOL {printf("%s\n",$5);}
 	|
 	;
 

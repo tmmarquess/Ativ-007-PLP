@@ -4,30 +4,33 @@
 */
 
 %{
-#define YYSTYPE double
+#define YYSTYPE char *
 #include "calc.tab.h" 
 #include <stdlib.h>
 
 void yyerror(char *s); 
 %}
-PRINTAR 			("show")	
+
 %%
 
-[0-9]+("."[0-9]+)? 	{ yylval = atof(yytext); return NUMBER; }
-[\n]				{ return EOL; }
-[+]					{ return PLUS; }
-[-]					{ return MINUS; }
-[/]					{ return DIVIDE; }
-[*]					{ return TIMES; }
-[(]					{ return P_LEFT;}
-[)]					{ return P_RIGHT;}
-[%]					{ return MOD; }
-(\*\*)				{ return POW; }
-[[:space:]]			;
-[a-zA-Z]+			{ return identifier; }
-{PRINTAR}			{ return SHOW; }
-[=]					{ return attribuition; }
-.					{ yyerror("Undefined token\n"); }
+[0-9]+("."[0-9]+)? 		{ yylval = yytext; return NUMBER; }
+[\n]					{ return EOL; }
+[+]						{ return PLUS; }
+[-]						{ return MINUS; }
+[/]						{ return DIVIDE; }
+[*]						{ return TIMES; }
+[(]						{ return P_LEFT;}
+[)]						{ return P_RIGHT;}
+[%]						{ return MOD; }
+(\*\*)					{ return POW; }
+\"						{ return QUOTE; }
+("print_str")			{ return PRINT; }
+[[:space:]]				;
+("show")				{ return SHOW; }
+[a-zA-Z][a-zA-Z0-9]+	{ yylval =  strdup(yytext); return identifier; }
+([a-zA-Z0-9])
+[=]						{ return attribuition; }
+.						{ yyerror("Undefined token\n"); }
 
 %%
 
