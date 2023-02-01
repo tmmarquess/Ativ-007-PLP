@@ -52,7 +52,7 @@ int get_index(int hash_value)
     return hash_value % SIZE;
 }
 
-node *is_name_in_table(hash_table table, char name[])
+node *get_item_by_name(hash_table table, char name[])
 {
     int hash = get_hash(name);
     int index = get_index(hash);
@@ -70,9 +70,19 @@ node *is_name_in_table(hash_table table, char name[])
     return NULL;
 }
 
+bool is_name_in_table(hash_table table, char name[])
+{
+    node *item = get_item_by_name(table, name);
+    if (item == NULL)
+    {
+        return false;
+    }
+    return true;
+}
+
 void insert_value_in_table(hash_table table, double value, char name[])
 {
-    node *exists = is_name_in_table(table, name);
+    node *exists = get_item_by_name(table, name);
 
     if (exists != NULL)
     {
