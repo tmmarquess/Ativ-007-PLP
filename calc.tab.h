@@ -63,7 +63,7 @@ extern int yydebug;
     P_LEFT = 269,
     P_RIGHT = 270,
     NUMBER = 271,
-    identifier = 272
+    STRING = 272
   };
 #endif
 

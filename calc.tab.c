@@ -141,7 +141,7 @@ extern int yydebug;
     P_LEFT = 269,
     P_RIGHT = 270,
     NUMBER = 271,
-    identifier = 272
+    STRING = 272
   };
 #endif
 
@@ -543,7 +543,7 @@ static const char *const yytname[] =
 {
   "$end", "error", "$undefined", "EOL", "PLUS", "MINUS", "DIVIDE",
   "TIMES", "MOD", "POW", "SHOW", "attribuition", "QUOTE", "PRINT",
-  "P_LEFT", "P_RIGHT", "NUMBER", "identifier", "$accept", "STATEMENT",
+  "P_LEFT", "P_RIGHT", "NUMBER", "STRING", "$accept", "STATEMENT",
   "EXPRESSION", YY_NULLPTR
 };
 #endif
@@ -1348,7 +1348,7 @@ yyreduce:
 
   case 3:
 #line 43 "calc.y"
-                                                           {printf("atribuicao\n");}
+                                                       {insert_value_in_table(variables, (yyvsp[-1].double_val), (yyvsp[-3].str_val));}
 #line 1353 "calc.tab.c"
     break;
 
@@ -1360,7 +1360,7 @@ yyreduce:
 
   case 5:
 #line 45 "calc.y"
-                                                                    {printf("%s\n",(yyvsp[-3].str_val));}
+                                                                {printf("%s\n",(yyvsp[-3].str_val));}
 #line 1365 "calc.tab.c"
     break;
 
@@ -1656,6 +1656,7 @@ void yyerror(char *s)
 
 int main(int argc, char *argv[])
 {
+	init_table(variables);
 	if (argc == 1)
     {
 		yyparse();

@@ -32,7 +32,7 @@ hash_table variables;
 %left P_LEFT P_RIGHT
 
 %token <double_val> NUMBER
-%token <str_val> identifier
+%token <str_val> STRING
 
 %type <double_val> STATEMENT EXPRESSION
 
@@ -40,9 +40,9 @@ hash_table variables;
 
 STATEMENT:
 	STATEMENT EXPRESSION EOL {$$ = $2; printf("Resultado: %f\n", $2);}
-	| STATEMENT identifier attribuition EXPRESSION EOL {printf("atribuicao\n");}
+	| STATEMENT STRING attribuition EXPRESSION EOL {insert_value_in_table(variables, $4, $2);}
 	| STATEMENT SHOW EOL {print_table(variables);}
-	| STATEMENT PRINT P_LEFT QUOTE identifier QUOTE P_RIGHT EOL {printf("%s\n",$5);}
+	| STATEMENT PRINT P_LEFT QUOTE STRING QUOTE P_RIGHT EOL {printf("%s\n",$5);}
 	|
 	;
 
@@ -68,6 +68,7 @@ void yyerror(char *s)
 
 int main(int argc, char *argv[])
 {
+	init_table(variables);
 	if (argc == 1)
     {
 		yyparse();
