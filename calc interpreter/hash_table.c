@@ -11,8 +11,9 @@
 
 typedef struct node
 {
-    double value;
-    char name[10];
+    char *value;
+    char type[5];
+    char *name;
     struct node *next;
 } node;
 
@@ -26,16 +27,17 @@ void init_table(hash_table table)
     }
 }
 
-node *new_node(double value, char name[])
+node *new_node(char *value, char *name, char type[])
 {
     node *new = malloc(sizeof(node));
     new->value = value;
-    strcpy(new->name, name);
+    strcpy(new->type, type);
+    new->name = name;
     new->next = NULL;
     return new;
 }
 
-int get_hash(char name[])
+int get_hash(char *name)
 {
     int len = strlen(name);
     int hash_value = 0;
@@ -52,7 +54,7 @@ int get_index(int hash_value)
     return hash_value % SIZE;
 }
 
-node *get_item_by_name(hash_table table, char name[])
+node *get_item_by_name(hash_table table, char *name)
 {
     int hash = get_hash(name);
     int index = get_index(hash);
@@ -70,7 +72,7 @@ node *get_item_by_name(hash_table table, char name[])
     return NULL;
 }
 
-bool is_name_in_table(hash_table table, char name[])
+bool is_name_in_table(hash_table table, char *name)
 {
     node *item = get_item_by_name(table, name);
     if (item == NULL)
@@ -80,7 +82,7 @@ bool is_name_in_table(hash_table table, char name[])
     return true;
 }
 
-void insert_value_in_table(hash_table table, double value, char name[])
+void insert_value_in_table(hash_table table, char *value, char *name, char type[])
 {
     node *exists = get_item_by_name(table, name);
 
@@ -92,7 +94,7 @@ void insert_value_in_table(hash_table table, double value, char name[])
 
     int hash_value = get_hash(name);
     int index = get_index(hash_value);
-    node *new = new_node(value, name);
+    node *new = new_node(value, name, type);
 
     if (table[index] == NULL)
     {
@@ -109,12 +111,7 @@ void insert_value_in_table(hash_table table, double value, char name[])
     }
 }
 
-void update(hash_table table, double value, char name[])
-{
-    insert_value_in_table(table, value, name);
-}
-
-bool remove_value_from_table(hash_table table, char name[])
+bool remove_value_from_table(hash_table table, char *name)
 {
     int hash_value = get_hash(name);
     int index = get_index(hash_value);
@@ -159,7 +156,7 @@ void print_table(hash_table table)
         node *actual = table[i];
         while (actual != NULL)
         {
-            printf(" %s = %f ->", actual->name, actual->value);
+            printf(" %s (%s) = %s ->", actual->name, actual->type, actual->value);
             actual = actual->next;
             empty = false;
         }

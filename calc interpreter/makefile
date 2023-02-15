@@ -4,5 +4,5 @@ calc: calc.y calc.l
 	gcc -o calc calc.l.c calc.tab.c -ll -lm 
 
 clean:
-	rm -f *.c *.h calc
+	rm -f *.tab.c *.l.c *.h calc
 
