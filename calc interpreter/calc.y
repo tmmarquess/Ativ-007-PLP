@@ -32,7 +32,7 @@ hash_table variables;
 %left P_LEFT P_RIGHT
 
 %token <double_val> NUMBER
-%token <str_val> STRING
+%token <str_val> STRING TYPE
 
 %type <double_val> STATEMENT EXPRESSION
 
@@ -40,7 +40,8 @@ hash_table variables;
 
 STATEMENT:
 	STATEMENT EXPRESSION EOL {$$ = $2; printf("Resultado: %f\n", $2);}
-	| STATEMENT STRING attribuition EXPRESSION EOL {insert_value_in_table(variables, $4, $2);}
+	| STATEMENT TYPE STRING attribuition EXPRESSION EOL {char value[20]; sprintf(value, "%f", $5);insert_value_in_table(variables, value, $3, $2);}
+	| STATEMENT TYPE STRING attribuition QUOTE STRING QUOTE EOL {insert_value_in_table(variables, $6, $3, $2); }
 	| STATEMENT SHOW EOL {print_table(variables);}
 	| STATEMENT PRINT P_LEFT QUOTE STRING QUOTE P_RIGHT EOL {printf("%s\n",$5);}
 	|

@@ -84,6 +84,11 @@ bool is_name_in_table(hash_table table, char *name)
 
 void insert_value_in_table(hash_table table, char *value, char *name, char type[])
 {
+    if (!strcmp(type, "char"))
+    {
+        *value = value[0];
+    }
+
     node *exists = get_item_by_name(table, name);
 
     if (exists != NULL)
