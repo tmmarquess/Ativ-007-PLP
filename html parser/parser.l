@@ -2,11 +2,13 @@
     /*Exemplo de uso do flex*/
 %}
 
-OPENTAG     <[^<]+>
+OPENTAG     <[^<\/]+>
+CLOSETAG    <\/[^<]+>
 STRING      [^<>"\n"]+
 
 %%
-{OPENTAG}   {printf("Voce escreveu uma tag: \"%s\"\n", yytext);}
+{OPENTAG}   {printf("Voce abriu uma tag: \"%s\"\n", yytext);}
+{CLOSETAG}  {printf("Voce fechou uma tag: \"%s\"\n", yytext);}
 [[:space:]] ;
 {STRING}    {printf("String dentro da Tag \"%s\"\n", yytext);}
 .           {printf("Nao reconhecido: \"%s\"\n", yytext);}
