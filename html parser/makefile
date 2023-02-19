@@ -1,7 +1,7 @@
-calc: calc.l
-	flex -o calc.l.c calc.l
-	gcc -o calc calc.l.c -ll -lm 
+parser: parser.l
+	flex -o parser.l.c parser.l
+	gcc -o parser parser.l.c -ll -lm 
 
 clean:
-	rm -f *.tab.c *.l.c *.h calc
+	rm -f *.tab.c *.l.c *.h parser
 

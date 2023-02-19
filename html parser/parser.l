@@ -3,7 +3,7 @@
 %}
 
 OPENTAG     <[^<]+>
-STRING      (" "*[a-zA-Z0-9]+\.*" "*)+
+STRING      [^<>"\n"]+
 
 %%
 {OPENTAG}   {printf("Voce escreveu uma tag: \"%s\"\n", yytext);}
