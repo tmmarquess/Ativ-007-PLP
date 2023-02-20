@@ -1,8 +1,3 @@
-/*
-	Calculadora v.4 - Lê de arquivos ou linha de comando
-	Jucimar Jr
-*/
-
 %{
 #include "calc.tab.h" 
 #include <stdlib.h>

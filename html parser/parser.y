@@ -1,75 +1,51 @@
 /*
-	Calculadora v.4 - Lê de arquivos ou linha de comando
-	Jucimar Jr
+AAAAAAAAAAAAAAA
 */
 
 %{
-#include <stdio.h>
-#include "hash_table.c"
-#include <math.h>
+#include "stack.c"
 extern FILE* yyin;
 
 void yyerror(char *s);
 int yylex(void);
 int yyparse();
 
-hash_table variables;
+Stack *tags;
 %}
 
 %union{
-    double double_val;
     char *str_val;
+	double double_val;
 };
 
-%token EOL
-%token PLUS MINUS DIVIDE TIMES MOD POW
-%token SHOW attribuition QUOTE PRINT
-%token P_LEFT P_RIGHT
+%token <str_val> OPENTAG CLOSETAG BLANKSPACE STRING
 
-%left PLUS MINUS
-%left TIMES DIVIDE
-%left MOD POW
-%left P_LEFT P_RIGHT
-
-%token <double_val> NUMBER
-%token <str_val> STRING TYPE
-
-%type <double_val> STATEMENT EXPRESSION
+%type <str_val> STATEMENT EXPRESSION
 
 %%
 
 STATEMENT:
-	STATEMENT EXPRESSION EOL {$$ = $2; printf("Resultado: %f\n", $2);}
-	| STATEMENT TYPE STRING attribuition EXPRESSION EOL {char value[20]; sprintf(value, "%f", $5);insert_value_in_table(variables, value, $3, $2);}
-	| STATEMENT TYPE STRING attribuition QUOTE STRING QUOTE EOL {insert_value_in_table(variables, $6, $3, $2); }
-	| STATEMENT SHOW EOL {print_table(variables);}
-	| STATEMENT PRINT P_LEFT QUOTE STRING QUOTE P_RIGHT EOL {printf("%s\n",$5);}
-	|
+	OPENTAG EXPRESSION {add_value(&tags, $1);}
 	;
 
 EXPRESSION:
-	NUMBER {$$ = $1;}
-	|	EXPRESSION PLUS EXPRESSION {$$ = $1 + $3;}
-	|	EXPRESSION MINUS EXPRESSION {$$ = $1 - $3;}
-	|	EXPRESSION TIMES EXPRESSION {$$ = $1 * $3;}
-	|	EXPRESSION DIVIDE EXPRESSION {$$ = $1 / $3;}
-	|	EXPRESSION MOD EXPRESSION {$$ = (int) $1 % (int) $3;}
-	|	EXPRESSION POW EXPRESSION {$$ = pow($1, $3);}
-	|	P_LEFT EXPRESSION P_RIGHT {$$ = $2;}
+	OPENTAG EXPRESSION CLOSETAG EXPRESSION{add_value(&tags, $1); check_tag_match(&tags, $3);}
+	|	OPENTAG CLOSETAG {add_value(&tags, $1); check_tag_match(&tags, $2);}
+	|	STRING {$$ = $1;}
+	|
 	;
-
 
 %%
 
 void yyerror(char *s)
 {
 	printf("Error: %s\n", s);
-	yyparse();
+	exit(1);
 }
 
 int main(int argc, char *argv[])
 {
-	init_table(variables);
+	tags = NULL;
 	if (argc == 1)
     {
 		yyparse();
@@ -80,6 +56,6 @@ int main(int argc, char *argv[])
     	yyin = fopen(argv[1], "r");
 		yyparse();
     }
-
+	finish_code(&tags);
 	return 0;
 }

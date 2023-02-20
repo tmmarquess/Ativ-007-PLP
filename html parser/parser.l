@@ -1,25 +1,22 @@
 %{
-    /*Exemplo de uso do flex*/
+#include "parser.tab.c" 
+#include <stdlib.h>
+
+void yyerror(char *s); 
 %}
 
-OPENTAG     <[^<\/]+>
-CLOSETAG    <\/[^<]+>
-STRING      [^<>"\n"]+
+OPENTAG             	<[^<\/]+>
+CLOSETAG            	<\/[^<]+>
+STRING              	[^<>]+
 
 %%
-{OPENTAG}   {printf("Voce abriu uma tag: \"%s\"\n", yytext);}
-{CLOSETAG}  {printf("Voce fechou uma tag: \"%s\"\n", yytext);}
-[[:space:]] ;
-{STRING}    {printf("String dentro da Tag \"%s\"\n", yytext);}
-.           {printf("Nao reconhecido: \"%s\"\n", yytext);}
+{OPENTAG}	          	{ yylval.str_val = strdup(yytext); return OPENTAG; }
+{CLOSETAG}          	{ yylval.str_val = strdup(yytext); return CLOSETAG; }
+([[:space:]]+|"\n"|"") 	;
+{STRING}            	{ yylval.str_val = strdup(yytext); return STRING; }
+.                   	{ yyerror(yytext); }
 %%
-int main(int argc, char *argv[])
+int yywrap()
 {
-    if(argc < 2)
-    {
-        printf ("Missing input file\n");
-        exit(-1);
-    }
-    yyin = fopen(argv[1], "r" );
-    yylex();
+	return 1;
 }

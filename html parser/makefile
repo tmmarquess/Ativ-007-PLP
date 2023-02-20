@@ -1,4 +1,5 @@
-parser: parser.l
+parser: parser.y parser.l
+	bison -d parser.y
 	flex -o parser.l.c parser.l
 	gcc -o parser parser.l.c -ll -lm 
 
